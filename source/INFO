@@ -1,5 +1,5 @@
 package="autorun"
-version="1.4"
+version="1.5"
 maintainer="Jan Reidemeister"
 description="Execute scripts when connecting external drives (USB / eSATA). Includes GUI to create such scripts for the build-in local backup and allows to encrypt the backups."
 description_ger="Erlaubt das automatische Ausführen von Skripten beim Anschluss von externen Geräten (USB / eSATA). Inklusive Oberfläche zum Erstellen passender Skripte für die Datensicherung, auch mit Verschlüsselung."

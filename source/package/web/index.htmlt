@@ -36,6 +36,28 @@
 			as the second (<code>$2</code>).</small></td>
 		</tr>
 		<tr>
+		    <td>Search time:</td>
+		    <td></td>
+		    <td><input type="text" name="searchtime" size="25" value="==:TRIES:=="/></td>
+		    <td></td>
+		</tr>
+		<tr>
+		    <td colspan="4"><small>&nbsp;&nbsp;&nbsp;The time (in secords) how long autorun should search for
+			a mounted drive.<br/>
+			&nbsp;&nbsp;&nbsp;Increase this value when you get the "unable to find mount point" error.</small></td>
+		</tr>
+		<tr>
+		    <td>Wait time:</td>
+		    <td></td>
+		    <td><input type="text" name="waittime" size="25" value="==:WAIT:=="/></td>
+		    <td></td>
+		</tr>
+		<tr>
+		    <td colspan="4"><small>&nbsp;&nbsp;&nbsp;An additional wait time (in secords) before starting the 
+			script to give the DS enough time to properly<br/>
+			&nbsp;&nbsp;&nbsp;mount the drive.</small></td>
+		</tr>
+		<tr>
 		    <td>Beep at the start and end:</td>
 		    <td></td>
 		    <td><input type="checkbox" name="beep" ==:BEEP:== /></td>

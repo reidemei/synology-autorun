@@ -6,8 +6,9 @@ then
 	exit 1
 fi
 
-source /var/packages/autorun/target/config
 TRIES=20
+WAIT=0
+source /var/packages/autorun/target/config
 LOGDIR="/var/packages/autorun/target"
 MOUNTPATH=""
 COUNT=0
@@ -28,6 +29,8 @@ then
 fi
 
 echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$1' - mount point '$MOUNTPATH' found<br/>" >> $LOGDIR/log
+
+/bin/sleep $WAIT
 
 if [ -x "$MOUNTPATH/$SCRIPT" ]
 then
