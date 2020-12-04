@@ -18,9 +18,11 @@ if ($user ne "admin") {
 
 # default values 
 $tmplhtml{'saved'}="";
-$tmplhtml{'script'}="autorun";
-$tmplhtml{'beep'}=" checked ";
-$tmplhtml{'led'}=" checked ";
+$tmplhtml{'SCRIPT'}="autorun";
+$tmplhtml{'BEEP'}=" checked ";
+$tmplhtml{'LED'}=" checked ";
+$tmplhtml{'NOTIFY'}=" checked ";
+$tmplhtml{'NOTIFYTARGET'}="admin";
 
 # shall we save?
 $action=param ('action');
@@ -29,6 +31,8 @@ if ($action eq "save") {
 	$script=param ('script');
 	$beep=param ('beep');
 	$led=param ('led');
+        $notify=param ('notify');
+        $notifytarget=param ('notifytarget');
 	print OUT "SCRIPT=$script\n";
 	if ($beep eq "on") {
 	    print OUT "BEEP=1\n";
@@ -40,6 +44,12 @@ if ($action eq "save") {
 	} else {
 	    print OUT "LED=0\n";
 	}
+        if ($notify eq "on") {
+            print OUT "NOTIFY=1\n";
+        } else {
+            print OUT "NOTIFY=0\n";
+        }
+        print OUT "NOTIFYTARGET=$notifytarget\n";
 	close (OUT);
 	$tmplhtml{'saved'}=" <small style=\"color:green;\">(saved)</small>";
     } else {
@@ -75,6 +85,11 @@ if (open (IN, "/var/packages/autorun/target/config")) {
 	$tmplhtml{'LED'} = "checked=\"checked\"";
     } else {
 	$tmplhtml{'LED'} = "";
+    }
+    if ($tmplhtml{'NOTIFY'} eq "1") {
+        $tmplhtml{'NOTIFY'} = "checked=\"checked\"";
+    } else {
+        $tmplhtml{'NOTIFY'} = "";
     }
 } else {
     $tmplhtml{'saved'}=" <small style=\"color:red;\">(unable to load the config)</small>";
