@@ -16,22 +16,15 @@ if ($user ne "admin") {
     die;
 }
 
-# header
-print '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">', "\n";
-print "<html><head><title>autorun</title></head><body>\n";
-
-# description
-print "<h3>Description</h3>\n";
-print "<p><b>autorun</b> allows to execute scripts when an external device (USB + eSATA) is connected to the DiskStation.<br/>\n";
-print "To enable it start the package via the \"<i>Package Management</i>\". The log file can be viewed there too (\"<i>Show info</i>\" - \"<i>Protocol</i>\").<br/>\n";
-print "When a device is connected to the DiskStation and successfully mounted the configured script (located on the device) will be executed. An exit value of \"100\" of the script will unmount and eject the device, all other values will leave it mounted.</p>\n";
-
-# configuration
-print "<h3>Configuration";
+# default values 
+$tmplhtml{'saved'}="";
+$tmplhtml{'script'}="autorun";
+$tmplhtml{'beep'}=" checked ";
+$tmplhtml{'led'}=" checked ";
 
 # shall we save?
 $action=param ('action');
-if ($ENV{'REQUEST_METHOD'} eq "POST") {
+if ($action eq "save") {
     if (open (OUT, ">/var/packages/autorun/target/config")) {
 	$script=param ('script');
 	$beep=param ('beep');
@@ -48,16 +41,21 @@ if ($ENV{'REQUEST_METHOD'} eq "POST") {
 	    print OUT "LED=0\n";
 	}
 	close (OUT);
-	print " <small style=\"color:green;\">(saved)</small>";
+	$tmplhtml{'saved'}=" <small style=\"color:green;\">(saved)</small>";
     } else {
-	print " <small style=\"color:red;\">(unable to save the config)</small>";
+	$tmplhtml{'saved'}=" <small style=\"color:red;\">(unable to save the config)</small>";
+    }
+}
+
+# shall we reset the led?
+if ($action eq "resetled") {
+    if (open (OUT, ">/dev/ttyS1")) {
+	print OUT "8";
+	close (OUT);
     }
 }
 
 # (re-)read the configuration
-$conf_script="autorun";
-$conf_beep="1";
-$conf_led="1";
 if (open (IN, "/var/packages/autorun/target/config")) {
     while (<IN>) {
 	chomp;
@@ -65,63 +63,58 @@ if (open (IN, "/var/packages/autorun/target/config")) {
 	s/^\s+//;
 	s/\s+$//;
 	my ($var, $value) = split(/\s*=\s*/, $_, 2);
-	if ($var eq "SCRIPT") {
-	    $conf_script=$value;
-	}
-	if ($var eq "BEEP") {
-	    $conf_beep=$value;
-	}
-	if ($var eq "LED") {
-	    $conf_led=$value;
-	}
+	$tmplhtml{$var}=$value;
     }
     close (IN);
+    if ($tmplhtml{'BEEP'} eq "1") {
+	$tmplhtml{'BEEP'} = "checked=\"checked\"";
+    } else {
+	$tmplhtml{'BEEP'} = "";
+    }
+    if ($tmplhtml{'LED'} eq "1") {
+	$tmplhtml{'LED'} = "checked=\"checked\"";
+    } else {
+	$tmplhtml{'LED'} = "";
+    }
 } else {
-    print " <small style=\"color:red;\">(unable to load the config)</small>";
+    $tmplhtml{'saved'}=" <small style=\"color:red;\">(unable to load the config)</small>";
 }
 
-# form
-print "</h3>\n";
-print "<form action=\"index.cgi\" method=\"post\">\n";
-print "<table border=\"0\">\n";
-print "<tr><td><b>Script to execute:</b></td><td width=\"10\"></td><td><input type=\"text\" name=\"script\" size=\"25\" value=\"$conf_script\"/></td><td width=\"200px\"></td></tr>\n";
-print "<tr><td colspan=\"4\"><small>&nbsp;&nbsp;&nbsp;The script must be located in the root directory of the device and set as executable for the user \"root\".</small></td></tr>\n";
-print "<tr><td><b>Beep at the start and end:</b></td><td></td><td><input type=\"checkbox\" name=\"beep\"/";
-if ($conf_beep eq "1") {
-    print " checked ";
+# clear the log file?
+if ($action eq "clearlog") {
+    if (open (OUT, ">/var/packages/autorun/target/log")) {
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	$year += 1900; ## $year contains no. of years since 1900, to add 1900 to make Y2K compliant
+	$dt = sprintf ("%04s-%02s-%02s %02s:%02s:%02s", $year, $mon, $mday, $hour, $min, $sec);
+	print OUT "$dt: log file cleared<br/>\n";
+	close (OUT);
+    }
+    $action = "log"
 }
-print "></td><td></td></tr>\n";
-print "<tr><td><b>Use status LED:</b></td><td></td><td><input type=\"checkbox\" name=\"led\"";
-if ($conf_led eq "1") {
-    print " checked ";
+
+# shall we display the log?
+if ($action eq "log") {
+    if (open (IN, "log.html")) {
+	while (<IN>) {
+	    s/==:([^:]+):==/$tmplhtml{$1}/g;
+	    print $_;
+	}
+	close (IN);
+	if (open (IN, "/var/packages/autorun/target/log")) {
+	    while (<IN>) {
+		print $_;
+	    }
+	    close (IN);
+	}
+	print "</code>\n</p>\n</body>\n</html>";
+    }
+} else {
+    # print html page
+    if (open (IN, "page.html")) {
+	while (<IN>) {
+	    s/==:([^:]+):==/$tmplhtml{$1}/g;
+	    print $_;
+	}
+	close (IN);
+    }
 }
-print "/></td><td></td></tr>\n";
-print "<tr><td colspan=\"4\"><small>&nbsp;&nbsp;&nbsp;When enable the status LED will switch to orange while the script is running. You can savely remove<br/>&nbsp;&nbsp;&nbsp;the device when it goes green again (and the script triggered an eject).</small></td></tr>\n";
-print "<input type=\"hidden\" name=\"action\" value=\"save\"/>\n";
-print "<td></td><td></td><td align=\"right\">\n";
-print "<input type=\"reset\" value=\"  Reset  \"/>\n";
-print "<input type=\"submit\" value=\"  Save  \"/>\n";
-print "</td><td></td></tr>\n";
-print "</table>\n";
-print "</form>\n";
-
-# limitations
-print "<h3>Limitations</h3>\n";
-print "<ul>\n<li>Multiple executions (two or more devices at the same time) are possible but the status display via the LED will not properly reflect it.</li>\n";
-print "<li>There is no error handling for the called scripts.</li>\n";
-print "<li>Scripts might also be called during system boot-up when some resources are not be available.</li>\n";
-print "<li>Problems while unmounting the device will be signaled with three long beeps. The status LED will be left orange (if enabled) so you have to reset it yourself (<code>echo 8 > /dev/ttyS1</code>).</li>\n</ul>\n";
-
-# license
-print "<h3>License <small>(BSD)</small></h3>\n";
-print "<p><small>Copyright (c) 2011, Jan Reidemeister<br/>\n";
-print "All rights reserved.<br/><br/>\n";
-print "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n";
-print "<ul>\n<li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>\n";
-print "<li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>\n";
-print "<li>Neither the name of Jan Reidemeister nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.</li>\n</ul>\n";
-print "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.<br/><br/>\n";
-print "Icon from <a href=\"http://openiconlibrary.sourceforge.net\">Open Icon Library</a> (Nuvola 1.0, LGPL-2.1).</small></p>\n";
-
-# end
-print "</body></html>\n";
