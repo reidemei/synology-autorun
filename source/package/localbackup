@@ -1,0 +1,41 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+	echo "incorrect '\$1' - aborting ..."
+	exit 1
+fi
+if [ -z "$2" ]
+then
+	echo "incorrect '\$2' - aborting ..."
+	exit 1
+fi
+if [ -z "$3" ]
+then
+	echo "incorrect '\$4' - aborting ..."
+	exit 1
+fi
+if [ -z "$4" ]
+then
+	echo "incorrect '\$4' - aborting ..."
+	exit 1
+fi
+
+LOGDIR="/var/packages/autorun/target"
+
+if [ $2 = $3 ]
+then
+    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: local backup '$1' started<br/>" >> $LOGDIR/log
+    /usr/syno/bin/synolocalbkp -a "$1"
+    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: local backup '$1' finished<br/>" >> $LOGDIR/log
+else
+    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: <span style=\"color:red;\">parameters changed for local backup '$1' - '$2' expected but '$3' found, aborting</span><br/>" >> $LOGDIR/log
+    echo 3 > /dev/ttyS1
+    sleep 1s
+    echo 3 > /dev/ttyS1
+    sleep 1s
+    echo 3 > /dev/ttyS1
+    sleep 1s
+fi
+
+exit $4

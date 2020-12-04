@@ -10,7 +10,7 @@ case $1 in
 			cp "${SYNOPKG_PKGDEST}/hotplug" /usr/syno/hotplug.d/default/99autorun.hotplug
 			chmod 700 /usr/syno/hotplug.d/default/99autorun.hotplug
 		fi
-                echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Autorun activated<br/>" >> ${SYNOPKG_PKGDEST}/log
+                echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun activated<br/>" >> ${SYNOPKG_PKGDEST}/log
 		exit 0
 	;;
 	stop)
@@ -18,7 +18,7 @@ case $1 in
 		then
 			rm -f /usr/syno/hotplug.d/default/99autorun.hotplug
 		fi
-		echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Autorun deactivated<br/>" >> ${SYNOPKG_PKGDEST}/log
+		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun deactivated<br/>" >> ${SYNOPKG_PKGDEST}/log
 		exit 0
 	;;
 	status)
