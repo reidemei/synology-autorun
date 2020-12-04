@@ -1,0 +1,14 @@
+#!/bin/sh
+
+VERSION="1.7"
+
+rm package.tgz
+rm autorun-$VERSION.spk
+echo "building package"
+tar -czvvf package.tgz -C package/ autorun common rules udev
+echo " "
+echo "building spk"
+chmod 700 package.tgz
+tar -cvvf autorun-$VERSION.spk INFO CHANGELOG LICENSE PACKAGE_ICON.PNG WIZARD_UIFILES scripts package.tgz
+rm package.tgz
+chmod 777 autorun-$VERSION.spk
