@@ -1,4 +1,12 @@
-﻿1.6
+﻿1.7
+ - changed: compatibility with DSM 6.0
+ - changed: configuration moved to setup, just un- and reinstall if you want to change something
+ - fixed: eject does not properly work sometimes
+ - removed: all GUI, this includes the local backup scripts 
+            (sorry, but I'm tired of the constant changes by Synology)
+ - note: for DSM 5.x use the version 1.6, which can be found 
+   at http://www.synology-forum.de/showthread.html?53183-autorun
+1.6
  - changed: compatibility with DSM 5.1
 1.5
  - changed: configurable wait times before starting the script

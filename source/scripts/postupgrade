@@ -14,12 +14,6 @@ then
         cp /tmp/net.reidemeister.autorun/log /var/packages/autorun/target/
     fi
 
-    # restore passwords
-    if [ -d "/tmp/net.reidemeister.autorun/passwords" ]
-    then
-        cp -r /tmp/net.reidemeister.autorun/passwords /var/packages/autorun/target/
-    fi
-
     echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun upgraded<br/>" >> "/var/packages/autorun/target/log"
 fi
 

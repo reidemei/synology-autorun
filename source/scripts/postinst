@@ -1,16 +1,42 @@
 #!/bin/sh
 
 eval $(env | grep "^SYNOPKG_PKGDEST=")
+eval $(env | grep "^config_script=")
+eval $(env | grep "^config_search=")
+eval $(env | grep "^config_wait=")
+eval $(env | grep "^config_beep=")
+eval $(env | grep "^config_led=")
+eval $(env | grep "^config_notify=")
+
+echo "SCRIPT=$config_script" > "$SYNOPKG_PKGDEST/config"
+echo "TRIES=$config_search" >> "$SYNOPKG_PKGDEST/config"
+echo "WAIT=$config_wait" >> "$SYNOPKG_PKGDEST/config"
+if [ $config_beep = "true" ]
+then
+	echo "BEEP=1" >> "$SYNOPKG_PKGDEST/config"
+else
+	echo "BEEP=0" >> "$SYNOPKG_PKGDEST/config"
+fi
+if [ $config_led = "true" ]
+then
+	echo "LED=1" >> "$SYNOPKG_PKGDEST/config"
+else
+	echo "LED=0" >> "$SYNOPKG_PKGDEST/config"
+fi
+if [ -z "$config_notify" ]
+then
+	echo "NOTIFY=0" >> "$SYNOPKG_PKGDEST/config"
+else
+	echo "NOTIFY=1" >> "$SYNOPKG_PKGDEST/config"
+fi
+echo "NOTIFYTARGET=$config_notify" >> "$SYNOPKG_PKGDEST/config"
+
 chmod 700 "$SYNOPKG_PKGDEST/autorun"
 chmod 700 "$SYNOPKG_PKGDEST/common"
 chmod 600 "$SYNOPKG_PKGDEST/config"
-chmod 700 "$SYNOPKG_PKGDEST/encryptbackup"
-chmod 700 "$SYNOPKG_PKGDEST/hotplug"
-chmod 700 "$SYNOPKG_PKGDEST/localbackup"
 chmod 400 "$SYNOPKG_PKGDEST/rules"
 chmod 700 "$SYNOPKG_PKGDEST/udev"
 chown -R admin.users "$SYNOPKG_PKGDEST"
-ln -s "${SYNOPKG_PKGDEST}/web" /usr/syno/synoman/webman/3rdparty/autorun
 echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun installed<br/>" >> "${SYNOPKG_PKGDEST}/log"
 
 exit 0

@@ -20,7 +20,7 @@ COUNT=0
 logInfo "device '$1' - inserted, trying to find mount point"
 while ([ -z "$MOUNTPATH" ] && [ $COUNT -lt $TRIES ])
 do
-	MOUNTPATH=`/bin/mount 2>&1 | /bin/grep "/dev/$1" | /usr/bin/cut -d ' ' -f3`
+	MOUNTPATH=`/bin/mount 2>&1 | /bin/grep "/dev/$1" | /bin/cut -d ' ' -f3`
 	COUNT=$(($COUNT+1))
 	/bin/sleep 1s
 done
@@ -59,19 +59,20 @@ then
 	RESULT=$?
 
 	# get the free space
-        FREE=`/bin/df -h "$MOUNTPATH" | /bin/grep "$MOUNTPATH" | /usr/bin/awk '{ print $4 }'`
+        FREE=`/bin/df -h "$MOUNTPATH" | /bin/grep "$MOUNTPATH" | /bin/awk '{ print $4 }'`
 
 	# unmount when the result is 100
 	if [ $RESULT = "100" ]
 	then
 		logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' finished ($FREE left on device), starting unmount"
-		sleep 5
-		sync
-		umount $MOUNTPATH
+		/bin/sleep 5
+		/bin/sync
+		/bin/umount $MOUNTPATH
 		if [ $? -eq 0 ]
 		then
-			# and eject the drive 
-			echo 1 > /sys/block/$1/device/delete
+			# and eject the drive
+			EXTHD=`/bin/echo $1 | sed "s/[0-9]//"`
+			/bin/echo 1 > /sys/block/$EXTHD/device/delete
 			logInfo "device '$1' - unmounted and ejected"
 		else
 			# abort on error

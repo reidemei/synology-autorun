@@ -2,62 +2,33 @@
 
 case $1 in
 	start)
-		if [ -d "/usr/syno/hotplug.d/default" ]
+		if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
 		then
-			if [ -e /usr/syno/hotplug.d/default/99autorun.hotplug ]
-			then
-				exit 1
-			else
-				cp /var/packages/autorun/target/hotplug /usr/syno/hotplug.d/default/99autorun.hotplug
-				chmod 700 /usr/syno/hotplug.d/default/99autorun.hotplug
-			fi
+			exit 1
 		else
-			if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
-			then
-				exit 1
-			else
-				cp /var/packages/autorun/target/rules /usr/lib/udev/rules.d/99-autorun.rules
-				chmod 400 /usr/lib/udev/rules.d/99-autorun.rules
-				/usr/bin/udevadm control --reload-rules
-			fi
+			cp /var/packages/autorun/target/rules /usr/lib/udev/rules.d/99-autorun.rules
+			chmod 400 /usr/lib/udev/rules.d/99-autorun.rules
+			/usr/bin/udevadm control --reload-rules
 		fi
                 echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun activated<br/>" >> /var/packages/autorun/target/log
 		exit 0
 	;;
 	stop)
-		if [ -d "/usr/syno/hotplug.d/default" ]
+		if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
 		then
-			if [ -e /usr/syno/hotplug.d/default/99autorun.hotplug ]
-			then
-				rm -f /usr/syno/hotplug.d/default/99autorun.hotplug
-			fi
-		else
-			if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
-			then
-				rm -f /usr/lib/udev/rules.d/99-autorun.rules
-				/usr/bin/udevadm control --reload-rules
-			fi
+			rm -f /usr/lib/udev/rules.d/99-autorun.rules
+			/usr/bin/udevadm control --reload-rules
 		fi
 
 		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun deactivated<br/>" >> /var/packages/autorun/target/log
 		exit 0
 	;;
 	status)
-		if [ -d "/usr/syno/hotplug.d/default" ]
-		then
-			if [ -e /usr/syno/hotplug.d/default/99autorun.hotplug ]
-			then 
-				exit 0
-			else
-				exit 1
-			fi
+		if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
+		then 
+			exit 0
 		else
-			if [ -f /usr/lib/udev/rules.d/99-autorun.rules ]
-			then 
-				exit 0
-			else
-				exit 1
-			fi
+			exit 1
 		fi
 	;;
 	log)
