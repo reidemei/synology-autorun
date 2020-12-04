@@ -34,7 +34,6 @@ then
     then
 	# load pwd
 	PASSWD=`cat /var/packages/autorun/target/passwords/$1`
-	echo "$PASSWD<br/>" >> $LOGDIR/log
 	# create directories
 	if [ -d "$4/@LocalBackup@" ]
 	then
