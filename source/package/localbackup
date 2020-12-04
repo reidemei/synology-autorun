@@ -25,6 +25,7 @@ LOGDIR="/var/packages/autorun/target"
 
 if [ $2 = $3 ]
 then
+    sleep 10s
     echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$3' - local backup '$1' started<br/>" >> $LOGDIR/log
     /usr/syno/bin/synolocalbkp -b "$1"
     echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$3' - local backup '$1' finished<br/>" >> $LOGDIR/log

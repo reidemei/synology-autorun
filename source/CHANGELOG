@@ -1,0 +1,25 @@
+1.0
+ - new: local backup - option for file name encryption added
+ - changed: local backup - name must be entered manually (Synology changes that too often)
+ - changed: local backup - 10s sleep added to give the drive some time to be properly mounted
+0.9
+ - new: now supports update
+ - changed: DSM 3.2
+0.8
+ - fixed: don't log passwords
+0.7
+ - new: local backup - option for encryption added
+0.6
+ - changed: DSM 3.1
+ - fixed: local backup - wait till backup is finished
+0.5
+ - fixed: incorrect handling of DS restarts
+0.4
+ - new: create scripts for the local backup
+0.3
+ - new: settings page in DSM added
+0.2
+ - new: beep at start and finish
+ - new: use DS led for status
+0.1
+ - intial test

@@ -20,32 +20,42 @@
 	<ol style="margin-left: 10px; line-height: 16px;">
 	    <li>Attach the device (USB / eSATA). Stop the <b>autorun</b> package when there is already a script on 
 		it (via "<i>Package Management</i>").</li>
-	    <li>Configure the backup via the DSM ("<i>Backup and Restore</i>" - "<i>Backup</i>" - "<i>Create</i>" - 
-		use "<i>Local Backup</i>" and the share of the device for the destination). Configure the shares
-		you want to backup and set the task to manual (no schedule).</li>
-	    <li>Reload this page if the backup is not shown.</li>
-	    <li>Set the options and create the script via the button below.</li>
+	    <li>Configure the backup via the DSM - "<i>Backup and Restore</i>" - "<i>Backup</i>" - "<i>Create</i>" - 
+		use "<i>Local Backup</i>", the share of the external device for the destination and "LocalBackup" for the directory). 
+		Configure the shares you want to backup and set the task to manual (no schedule).</li>
+	    <li>Set the options and create the script via the button below.<br/>
+		<ul>
+		    <li><i>Backup name</i>: The name of the backup as configured in the DSM, case sensitive. Make sure it 
+			targets the attached device.</li>
+		    <li><i>Encrypt backup</i>: Shall the backup be encrypted on the external device? <b>The encryption has some special 
+			requirements so be sure to read the <a href="encrypt.cgi">description</a>!</b> There you can also find how to 
+			access the encrypted files.</li>
+		    <li><i>Password</i>: The password for the encryption. Be sure to remember this to be able to restore your data!</li>
+		    <li><i>Encrypt file names</i>: Shall folder and file names be encrypted? Please note that this may not work in all 
+			cases because of path name length limitations.</li>
+		</ul>
+	    </li>
 	    <li>Detach the device via the DSM ("<i>Control Panel</i>" - "<i>External Devices</i>" - "<i>Eject</i>").</li>
 	</ol>
 	<p style="margin-left: 22px; line-height: 16px;">The configured backup will be executed the next time the device is
 	    attached (and the <b>autorun</b> package is running).<br/>
-	    <b>The encryption has some special requirements so be sure to read the <a href="encrypt.cgi">description</a>!</b>
-	    There you can also find how to access the encrypted files.
 	</p>
 	<div class="h3"/>
 		<h3>Configured backups</h3>
 	</div>
-	<table border="0" style="margin-left: 22px; font-size:12px;">
+	<table border="0" style="margin-left: 22px; margin-top: 10px; font-size:12px;">
 	    <tr>
-		<th>Backup</th>
+		<th>Backup<br/>name</th>
 		<td width="10px"/>
 		<th>Target</th>
-		<td width="10px"/>
+		<td width="5px"/>
 		<th>Eject device<br/>when finished?</th>
-		<td width="10px"/>
+		<td width="5px"/>
 		<th>Encrypt<br/>backup?</th>
-		<td width="10px"/>
+		<td width="5px"/>
 		<th>Password</th>
+		<td width="5px"/>
+		<th>Encrypt<br/>file names?</th>
 		<td width="10px"/>
 		<td></td>
 	    </tr>
