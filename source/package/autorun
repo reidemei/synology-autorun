@@ -40,10 +40,12 @@ then
 	then
 		echo : > /dev/ttyS1
 	fi
-	$MOUNTPATH/autorun $MOUNTPATH $1
-	if [ $? -eq 100 ]
+	$MOUNTPATH/$SCRIPT $MOUNTPATH $1
+	RESULT=$?
+        FREE=`/bin/df -h "$MOUNTPATH" | /bin/grep "$MOUNTPATH" | /usr/bin/awk '{ print $4 }'`
+	if [ $RESULT = "100" ]
 	then
-		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$1' - script '$MOUNTPATH/$SCRIPT' finished, starting unmount<br/>" >> $LOGDIR/log
+		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$1' - script '$MOUNTPATH/$SCRIPT' finished ($FREE left on device), starting unmount<br/>" >> $LOGDIR/log
 		sleep 5
 		sync
 		umount $MOUNTPATH
@@ -61,7 +63,7 @@ then
 			exit 1
 		fi
 	else
-		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$1' - script '$MOUNTPATH/$SCRIPT' finished, no further actions<br/>" >> $LOGDIR/log
+		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$1' - script '$MOUNTPATH/$SCRIPT' finished ($FREE left on device), no further actions<br/>" >> $LOGDIR/log
 	fi
 	if [ $BEEP = "1" ]
 	then
@@ -71,6 +73,10 @@ then
 	then
 		echo 8 > /dev/ttyS1
 	fi
+        if [ $NOTIFY = "1" ]
+        then
+		/usr/syno/bin/synodsmnotify $NOTIFYTARGET "autorun" "script finished, $FREE left on $MOUNTPATH"
+        fi
 else
 	echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$1' - no script '$MOUNTPATH/$SCRIPT' found, no further actions<br/>" >> $LOGDIR/log
 fi

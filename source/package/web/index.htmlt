@@ -25,14 +25,14 @@
 	    <table border="0" style="margin-left:22px; font-size:12px;">
 		<tr>
 		    <td>Script to execute:</td>
-		    <td width="10"></td>
+		    <td width="100"></td>
 		    <td><input type="text" name="script" size="25" value="==:SCRIPT:=="/></td>
 		    <td width="200px"></td>
 		</tr>
 		<tr>
 		    <td colspan="4"><small>&nbsp;&nbsp;&nbsp;The script must be located in the root 
-			directory of the device and set as executable for the user "root". It gets the
-			mount point of the device as the first parameter (<code>$1</code>) and the device 
+			directory of the device and set as executable for the user "root".<br/>
+			&nbsp;&nbsp;&nbsp;It gets the mount point of the device as the first parameter (<code>$1</code>) and the device 
 			as the second (<code>$2</code>).</small></td>
 		</tr>
 		<tr>
@@ -53,10 +53,25 @@
 			&nbsp;&nbsp;&nbsp;the device when it goes green again (and the script triggered an 
 			eject).</small></td>
 		</tr>
+                <tr>
+                    <td>Notify via DSM when finished:</td>
+                    <td></td>
+                    <td><input type="checkbox" name="notify" ==:NOTIFY:== /></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Target user/group:</td>
+                    <td></td>
+                    <td><input type="text" name="notifytarget" size="25" value="==:NOTIFYTARGET:=="/></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><small>&nbsp;&nbsp;&nbsp;The user or group the notification should be sent to.
+			You can use a username or a @groupname<br/>
+			&nbsp;&nbsp;&nbsp;(including the leading @).</small></td>
+                </tr>
 		<tr>
-		    <td></td>
-		    <td></td>
-		    <td align="right">
+		    <td colspan="3" align="right">
 			<input type="hidden" name="action" value="save"/>
 			<input type="reset" value="  Reset  "/>
 			<input type="submit" value="  Save  "/>

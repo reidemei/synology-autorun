@@ -1,3 +1,8 @@
+1.1
+ - new: report space left on the device in the log
+ - new: optional DSM notification when finished
+ - changed: adjusted notes for file name encryption on the local backup
+ - fixed: script not executed when name changed
 1.0
  - new: local backup - option for file name encryption added
  - changed: local backup - name must be entered manually (Synology changes that too often)

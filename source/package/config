@@ -1,3 +1,5 @@
 SCRIPT=autorun
 BEEP=1
 LED=1
+NOTIFY=1
+NOTIFYTARGET=admin

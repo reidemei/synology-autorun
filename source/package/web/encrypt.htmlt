@@ -62,15 +62,16 @@
 	    ==:RESULT:==
 	    If you want to do it yourself via the command line (Telnet or SSH), the command is (all in one line):<br/>
 	    &nbsp;&nbsp;&nbsp;&nbsp;<code style="font-size:8px;">/usr/syno/sbin/mount.ecryptfs PATH/@LocalBackup@ PATH/LocalBackup -o </code>
-	    &nbsp;&nbsp;&nbsp;&nbsp;<code style="font-size:8px;">ecryptfs_cipher=aes,ecryptfs_key_bytes=32,ecryptfs_passthrough=n,no_sig_cache,ecryptfs_enable_filename_crypto,passwd=PASSWORD</code><br/>
-	    Replace the <code>PATH</code> and <code>PASSWORD</code> with the right values.<br/><br/>
+	    &nbsp;&nbsp;&nbsp;&nbsp;<code 
+style="font-size:8px;">ecryptfs_cipher=aes,ecryptfs_key_bytes=32,ecryptfs_passthrough=n,no_sig_cache,ecryptfs_enable_filename_crypto=ENCRYPTFILENAME,passwd=PASSWORD</code><br/>
+	    Replace the <code>PATH</code>, <code>ENCRYPTFILENAME</code> (y or n) and <code>PASSWORD</code> with the right values.<br/><br/>
 	    <br/>
 	    <b>When you don't have a DS</b><br/>
 	    The eCryptfs should be available on almost any Linux system. The following options are used:<br>
 	    &nbsp;&nbsp;&nbsp;&nbsp;Cypher: AES<br/>
 	    &nbsp;&nbsp;&nbsp;&nbsp;Key Bytes: 16<br/>
 	    &nbsp;&nbsp;&nbsp;&nbsp;Plaintext Passthrough: no<br/>
-	    &nbsp;&nbsp;&nbsp;&nbsp;Filename Encryption: yes<br/>
+	    &nbsp;&nbsp;&nbsp;&nbsp;Filename Encryption: yes or no depending on your settings<br/>
 	    The encrypted files are found in the "@LocalBackup@" directory.<br/>
 	    A walkthrough can be found here in <a href="http://forum.synology.com/enu/viewtopic.php?p=89581#p91990">English</a>
 	    or in <a href="http://www.synology-wiki.de/index.php/Wiederherstellen_verschl%C3%BCsselter_Ordner">German</a>.
