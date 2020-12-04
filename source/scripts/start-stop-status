@@ -2,15 +2,14 @@
 
 case $1 in
 	start)
-		eval $(env | grep "^SYNOPKG_PKGDEST=")
 		if [ -e /usr/syno/hotplug.d/default/99autorun.hotplug ]
 		then
 			exit 1
 		else
-			cp "${SYNOPKG_PKGDEST}/hotplug" /usr/syno/hotplug.d/default/99autorun.hotplug
+			cp /var/packages/autorun/target/hotplug /usr/syno/hotplug.d/default/99autorun.hotplug
 			chmod 700 /usr/syno/hotplug.d/default/99autorun.hotplug
 		fi
-                echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun activated<br/>" >> ${SYNOPKG_PKGDEST}/log
+                echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun activated<br/>" >> /var/packages/autorun/target/log
 		exit 0
 	;;
 	stop)
@@ -18,7 +17,7 @@ case $1 in
 		then
 			rm -f /usr/syno/hotplug.d/default/99autorun.hotplug
 		fi
-		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun deactivated<br/>" >> ${SYNOPKG_PKGDEST}/log
+		echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun deactivated<br/>" >> /var/packages/autorun/target/log
 		exit 0
 	;;
 	status)
@@ -30,10 +29,9 @@ case $1 in
 		fi
 	;;
 	log)
-		eval $(env | grep "^SYNOPKG_PKGDEST=")
-		if [ -e "${SYNOPKG_PKGDEST}/log" ]
+		if [ -e /var/packages/autorun/target/log ]
 		then
-			echo ${SYNOPKG_PKGDEST}/log
+			echo /var/packages/autorun/target/log
 		fi
 		exit 0
 	;;
