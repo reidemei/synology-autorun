@@ -1,7 +1,0 @@
-[{
-	"step_title": "On DSM 4.2 (and higher) also install the Perl package! This is required for the admin GUI.",
-        "items": [{
-                "type": "singleselect",
-                "desc": ""
-        }]
-}]
