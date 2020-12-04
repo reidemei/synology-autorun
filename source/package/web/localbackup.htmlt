@@ -17,7 +17,7 @@
 		<h3>Local backup</h3>
 	</div>
 	<p style="margin-left: 22px; line-height: 16px;">Do the following steps to create an autorun script for a local backup:</p>
-	<ol style="padding-left: 10px; line-height: 16px;">
+	<ol style="margin-left: 10px; line-height: 16px;">
 	    <li>Attach the device (USB / eSATA). Stop the <b>autorun</b> package when there is already a script on 
 		it (via "<i>Package Management</i>").</li>
 	    <li>Configure the backup via the DSM ("<i>Backup and Restore</i>" - "<i>Backup</i>" - "<i>Create</i>" - 

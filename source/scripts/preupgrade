@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#clean-up temp when required
+if [ -d "/tmp/net.reidemeister.autorun" ]
+then
+    rm -r /tmp/net.reidemeister.autorun
+fi
+
+# create temp
+mkdir /tmp/net.reidemeister.autorun
+
+# save config
+cp /var/packages/autorun/target/config /tmp/net.reidemeister.autorun
+
+# save log
+cp /var/packages/autorun/target/log /tmp/net.reidemeister.autorun
+
+# save passwords
+if [ -d "/var/packages/autorun/target/passwords" ]
+then
+    cp -r /var/packages/autorun/target/passwords /tmp/net.reidemeister.autorun
+fi
+
+exit 0
