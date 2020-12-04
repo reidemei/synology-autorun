@@ -90,7 +90,7 @@ if (open (IN,"/bin/mount 2>&1 |")) {
 	    } else {
 		$text = "<form $text /></td><td></td>\n";
 	    }
-	    $tmplhtml{'BACKUPS'} = "$tmplhtml{'BACKUPS'}\t\t<tr height=\"27\">\n\t\t\t$text\n\t\t</tr>\n";
+	    $tmplhtml{'BACKUPS'} = "$tmplhtml{'BACKUPS'}\t\t<tr height=\"27\">\n\t\t\t$text\n\t\t\t</form>\n\t\t</tr>\n";
 	}
     }
     close(IN);

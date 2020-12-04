@@ -1,3 +1,5 @@
+ - changed: link to restore encrypted backup added to main page
+ - fixed: unable to create backup-script when multiple drives attached (on some browsers)
 1.2
  - new: show warning for required Perl package
 1.1

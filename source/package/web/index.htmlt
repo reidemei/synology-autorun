@@ -87,6 +87,7 @@
 	<ul style="line-height: 16px;">
 	    <li><a href="index.cgi?action=log">View the log file</a></li>
 	    <li><a href="localbackup.cgi">Create an autorun script for the local backup</a> (with optional encryption)</li>
+	    <li><a href="encrypt.cgi">Restore an encrypted backup</a></li>
 	</ul>
 	
 	<div class="h3"/>
