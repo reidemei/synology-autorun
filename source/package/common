@@ -1,0 +1,30 @@
+#!/bin/sh
+
+LOGDIR="/var/packages/autorun/target"
+
+# write an info entry to out log file
+#   $1 - log entry
+logInfo() {
+	echo "`date +%Y-%m-%d` `date +%H:%M:%S`: $1<br/>" >> $LOGDIR/log
+}
+
+# write an error entry to out log file
+#   $1 - log entry
+logError() {
+	echo "`date +%Y-%m-%d` `date +%H:%M:%S`: <span style=\"color:red;\">$1</span><br/>" >> $LOGDIR/log
+}
+
+# set the led or send a beep
+#   $1 - event (see http://www.synology-wiki.de/index.php/LEDs_und_Buttons)
+beep() {
+	echo $1 > /dev/ttyS1
+}
+
+beepError() {
+        beep 3
+        sleep 1s
+	beep 3
+        sleep 1s
+	beep 3
+        sleep 1s
+}

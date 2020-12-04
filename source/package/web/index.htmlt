@@ -116,14 +116,18 @@
 		<h3>Limitations</h3>
 	</div>
 	<ul style="line-height: 16px;">
+	    <li>DSM 5.1: Especially on USB there might be duplicate events which can result in duplicate executions 
+		of the autorun script. Ejecting the device when finished is recommended.</li>
+	    <li>DSM 5.1: Once a device is connected, this port will be ignored for 2 minutes (to filter 
+		duplicate events).</li>
 	    <li>Multiple executions (two or more devices at the same time) are possible but the status 
 		display via the LED will not properly reflect it.</li>
 	    <li>There is no error handling for the called scripts.</li>
 	    <li>Scripts are executed as root. The path is limited so use absolute paths to the programs.</li>
-	    <li>Scripts might also be called during system boot-up when some resources are not be available.</li>
 	    <li>Problems while unmounting the device will be signaled with three long beeps. The status LED 
 		will be left orange (if enabled) so you have to reset it manually 
 		(<a href="index.cgi?action=resetled">click here to reset the LED</a>).</li>
+	    <li>Running another backup at the same time will prevent proper detection of the end of the backup.</li>
 	</ul>
 
 	<p style="margin-left:6px;"><b><a href="licence.html">Licence</a></b></p>

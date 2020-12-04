@@ -1,5 +1,6 @@
 rm package.tgz
-rm autorun-1.5.spk
-tar -czvf package.tgz -C package/ autorun hotplug localbackup encryptbackup config web -X tarexclude
-tar -cvvf autorun-1.5.spk INFO CHANGELOG LICENSE PACKAGE_ICON.PNG WIZARD_UIFILES scripts package.tgz -X tarexclude
+rm autorun-1.6.spk
+tar -czvf package.tgz -C package/ autorun common config encryptbackup hotplug localbackup rules udev web -X tarexclude
+tar -cvvf autorun-1.6.spk INFO CHANGELOG LICENSE PACKAGE_ICON.PNG WIZARD_UIFILES scripts package.tgz -X tarexclude
 rm package.tgz
+chmod 777 autorun-1.6.spk

@@ -1,8 +1,14 @@
 #!/bin/sh
 
 eval $(env | grep "^SYNOPKG_PKGDEST=")
-chmod 700 "$SYNOPKG_PKGDEST/hotplug"
 chmod 700 "$SYNOPKG_PKGDEST/autorun"
+chmod 700 "$SYNOPKG_PKGDEST/common"
+chmod 600 "$SYNOPKG_PKGDEST/config"
+chmod 700 "$SYNOPKG_PKGDEST/encryptbackup"
+chmod 700 "$SYNOPKG_PKGDEST/hotplug"
+chmod 700 "$SYNOPKG_PKGDEST/localbackup"
+chmod 400 "$SYNOPKG_PKGDEST/rules"
+chmod 700 "$SYNOPKG_PKGDEST/udev"
 chown -R admin.users "$SYNOPKG_PKGDEST"
 ln -s "${SYNOPKG_PKGDEST}/web" /usr/syno/synoman/webman/3rdparty/autorun
 echo "`date +%Y-%m-%d` `date +%H:%M:%S`: autorun installed<br/>" >> "${SYNOPKG_PKGDEST}/log"
