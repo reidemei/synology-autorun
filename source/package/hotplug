@@ -1,0 +1,24 @@
+#!/bin/sh
+
+if [ "$1" != "block" ]
+then
+	echo "incorrect '\$1' - aborting ..."
+	return	
+fi
+if [ "$ACTION" != "add" ]
+then 
+        echo "incorrect '\$ACTION' - aborting ..."
+	return
+fi
+if [ "$DEVTYPE" != "disk" ]
+then
+        echo "incorrect '\$DEVTYPE' - aborting ..."
+	return
+fi
+if [ -z "$DEVNAME" ]
+then
+        echo "incorrect '\$DEVNAME' - aborting ..."
+        return
+fi
+
+/usr/syno/hotplug.d/default/autorun $DEVNAME &

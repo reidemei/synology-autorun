@@ -1,0 +1,64 @@
+#!/bin/sh
+
+
+case $1 in
+	start)
+		eval $(env | grep "^SYNOPKG_PKGDEST=")
+		if [ -e /usr/syno/hotplug.d/default/99autorun.hotplug ]
+		then
+			exit 1
+		else
+			ln -s "${SYNOPKG_PKGDEST}/hotplug" /usr/syno/hotplug.d/default/99autorun.hotplug
+			chmod 700 /usr/syno/hotplug.d/default/99autorun.hotplug
+		fi
+		if [ -e /usr/syno/hotplug.d/default/autorun ]
+		then
+			exit 1
+		else
+			ln -s "${SYNOPKG_PKGDEST}/autorun" /usr/syno/hotplug.d/default/autorun
+			chmod 700 /usr/syno/hotplug.d/default/autorun
+		fi
+		if [ -e /usr/syno/hotplug.d/default/autorun.config ]
+		then
+			exit 1
+		else
+			ln -s "${SYNOPKG_PKGDEST}/config" /usr/syno/hotplug.d/default/autorun.config
+			chmod 500 /usr/syno/hotplug.d/default/autorun.config
+		fi
+                echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Autorun activated<br/>" >> ${SYNOPKG_PKGDEST}/log
+		exit 0
+	;;
+	stop)
+		if [ -e /usr/syno/hotplug.d/default/autorun.config ]
+		then
+			rm -f /usr/syno/hotplug.d/default/autorun.config
+		fi
+		if [ -e /usr/syno/hotplug.d/default/autorun ]
+		then
+			rm -f /usr/syno/hotplug.d/default/autorun
+		fi
+		if [ -e /usr/syno/hotplug.d/default/99autorun.hotplug ]
+		then
+			rm -f /usr/syno/hotplug.d/default/99autorun.hotplug
+		fi
+		echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Autorun deactivated<br/>" >> ${SYNOPKG_PKGDEST}/log
+		exit 0
+	;;
+	status)
+		if [ -e /usr/syno/hotplug.d/default/99autorun.hotplug ]
+		then 
+			exit 0
+		else
+			exit 1
+		fi
+	;;
+	log)
+                eval $(env | grep "^SYNOPKG_PKGDEST=")
+                if [ -e "${SYNOPKG_PKGDEST}/log" ]
+                then
+                        echo ${SYNOPKG_PKGDEST}/log
+                fi
+		exit 0
+	;;
+esac
+

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+	echo "incorrect '\$1' - aborting ..."
+	exit 1
+fi
+
+TRIES=20
+LOGDIR=`cat /usr/syno/hotplug.d/default/autorun.config`
+MOUNTPATH=""
+COUNT=0
+
+echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Device '$1' inserted, trying to find mount point<br/>" >> $LOGDIR/log
+
+while ([ -z "$MOUNTPATH" ] && [ $COUNT -lt $TRIES ])
+do
+	MOUNTPATH=`/bin/mount 2>&1 | /bin/grep "/dev/$1" | /usr/bin/cut -d ' ' -f3`
+	COUNT=$(($COUNT+1))
+	/bin/sleep 1s
+done
+
+if [ -z "$MOUNTPATH" ]
+then
+	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Unable to find mount point for device '$1'<br/>" >> $LOGDIR/log
+	return
+fi
+
+echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Mount point '$MOUNTPATH' found for device '$1'<br/>" >> $LOGDIR/log
+
+exit 0
