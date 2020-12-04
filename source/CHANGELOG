@@ -1,4 +1,6 @@
-﻿1.5
+﻿1.6
+ - changed: compatibility with DSM 5.1
+1.5
  - changed: configurable wait times before starting the script
 1.4
  !!! YOU HAVE TO RECREATE THE SCRIPTS FOR THE LOCAL BACKUP!!!
@@ -25,13 +27,13 @@
  - changed: local backup - 10s sleep added to give the drive some time to be properly mounted
 0.9
  - new: now supports update
- - changed: DSM 3.2
+ - changed: requires DSM 3.2
 0.8
  - fixed: don't log passwords
 0.7
  - new: local backup - option for encryption added
 0.6
- - changed: DSM 3.1
+ - changed: requires DSM 3.1
  - fixed: local backup - wait till backup is finished
 0.5
  - fixed: incorrect handling of DS restarts
