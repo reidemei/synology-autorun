@@ -1,3 +1,12 @@
+﻿1.4
+ !!! YOU HAVE TO RECREATE THE SCRIPTS FOR THE LOCAL BACKUP!!!
+ - changed: requires DSM 5.0+
+ - changed: include Perl package as requirement
+ - changed: local backup - adjustments for changes in DSM 5.0
+ - note: for DSM 4.3 and below use the version 1.3, which can be found 
+   at http://www.synology-forum.de/showthread.html?53183-autorun
+1.3
+ - changed: allow access to settings by any user in the admin group (code [c] dakkar)
  - changed: link to restore encrypted backup added to main page
  - fixed: unable to create backup-script when multiple drives attached (on some browsers)
 1.2

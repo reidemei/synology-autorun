@@ -11,7 +11,17 @@ if (open (IN,"/usr/syno/synoman/webman/modules/authenticate.cgi|")) {
     chop($user);
     close(IN);
 }
-if ($user ne "admin") {
+
+# verify $user is in group administrators
+$isadmin=false;
+($name, $passwd, $gid, $members) = getgrnam('administrators');
+for ($members) {
+    if ("$_" == $user) {
+        $isadmin="true"
+    }
+}
+
+if ($isadmin ne "true") {
     print "<HTML><HEAD><TITLE>Login Required</TITLE></HEAD><BODY>Please login as admin first, before using this webpage<br/><br/></BODY></HTML>\n";
     die;
 }

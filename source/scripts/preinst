@@ -1,8 +1,8 @@
 #!/bin/sh
 
 DSMMAJOR=`/bin/get_key_value /etc.defaults/VERSION majorversion`
-if [ $DSMMAJOR -lt 3 ]; then
-	echo "This package can only be used in DSM 3.0 and above!" > $SYNOPKG_TEMP_LOGFILE
+if [ $DSMMAJOR -lt 5 ]; then
+	echo "This package can only be used in DSM 5.0 and above!" > $SYNOPKG_TEMP_LOGFILE
 	exit 1
 fi
 

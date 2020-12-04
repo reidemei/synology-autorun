@@ -27,7 +27,12 @@ if [ $2 = $3 ]
 then
     sleep 10s
     echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$3' - local backup '$1' started<br/>" >> $LOGDIR/log
-    /usr/syno/bin/synolocalbkp -b "$1"
+    /usr/syno/bin/synobackup --backup "$1"
+    sleep 60
+    while [ "$(/bin/pidof synolocalbkp)" ]
+    do
+        sleep 60
+    done
     echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$3' - local backup '$1' finished<br/>" >> $LOGDIR/log
 else
     echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$3' - <span style=\"color:red;\">parameters changed for local backup '$1' - '$2' expected but '$3' found, aborting</span><br/>" >> $LOGDIR/log

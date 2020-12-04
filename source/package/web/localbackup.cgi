@@ -12,8 +12,18 @@ if (open (IN,"/usr/syno/synoman/webman/modules/authenticate.cgi|")) {
     chop($user);
     close(IN);
 }
-if ($user ne "admin") {
-    print "<HTML><HEAD><TITLE>Login Required</TITLE></HEAD><BODY>Please login as admin first, before using this webpage<br/><br/>";
+
+# verify $user is in group administrators
+$isadmin=false;
+($name, $passwd, $gid, $members) = getgrnam('administrators');
+for ($members) {
+    if ("$_" == $user) {
+        $isadmin="true"
+    }
+}
+
+if ($isadmin ne "true") {
+    print "<HTML><HEAD><TITLE>Login Required</TITLE></HEAD><BODY>Please login as admin first, before using this webpage<br/><br/></BODY></HTML>\n";
     die;
 }
 
@@ -84,7 +94,7 @@ if (open (IN,"/bin/mount 2>&1 |")) {
     while(<IN>) {
 	@tmp = split (" ");
 	if ((substr (@tmp[2], 0, 10) eq "/volumeUSB") || (substr (@tmp[2], 0, 11) eq "/volumeSATA")) {
-	    $text = " action=\"localbackup.cgi\" method=\"post\">\n\t\t\t\t<input type=\"hidden\" name=\"action\" value=\"create\" />\n\t\t\t\t<input type=\"hidden\" name=\"file\" value=\"@tmp[2]/$tmplhtml{'SCRIPT'}\" />\n\t\t\t\t<input type=\"hidden\" name=\"target\" value=\"@tmp[2]\" />\n\t\t\t\t<td><input type=\"text\" size=\"15\" name=\"backup\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td>@tmp[2]</td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"eject\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"encrypt\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"text\" size=\"15\" name=\"password\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"encryptfilename\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td>\n\t\t\t\t<td><input type=\"submit\" value=\"  Create  \"";
+	    $text = " action=\"localbackup.cgi\" method=\"post\">\n\t\t\t\t<input type=\"hidden\" name=\"action\" value=\"create\" />\n\t\t\t\t<input type=\"hidden\" name=\"file\" value=\"@tmp[2]/$tmplhtml{'SCRIPT'}\" />\n\t\t\t\t<input type=\"hidden\" name=\"target\" value=\"@tmp[2]\" />\n\t\t\t\t<td><input type=\"text\" size=\"5\" name=\"backup\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td>@tmp[2]</td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"eject\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"encrypt\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"text\" size=\"15\" name=\"password\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"encryptfilename\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td>\n\t\t\t\t<td><input type=\"submit\" value=\"  Create  \"";
 	    if (-e "@tmp[2]/$tmplhtml{'SCRIPT'}") {
 		$text = "<form onsubmit=\"return commitOverwrite(\'@tmp[2]/$tmplhtml{'SCRIPT'}\')\"$text /></td>\n\t\t\t</form>\n\t\t\t<form action=\"localbackup.cgi\" method=\"post\" onsubmit=\"return commitDelete(\'@tmp[2]/$tmplhtml{'SCRIPT'}\')\">\n\t\t\t\t<input type=\"hidden\" name=\"action\" value=\"delete\" />\n\t\t\t\t<input type=\"hidden\" name=\"file\" value=\"@tmp[2]/$tmplhtml{'SCRIPT'}\" />\n\t\t\t\t<td><input type=\"submit\" value=\"  Delete  \" /></td>\n\t\t\t</form>";
 	    } else {
@@ -94,6 +104,24 @@ if (open (IN,"/bin/mount 2>&1 |")) {
 	}
     }
     close(IN);
+}
+
+# find the backups
+$tmplhtml{'BACKUPSETS'} = "";
+if (open (IN, "/usr/syno/etc/synobackup.conf")) {
+	$taskid = "";
+	while (<IN>) {
+		chomp;
+		if (substr ($_, 0, 5) eq "[task") {
+			$taskid = substr ($_, 6);
+		}
+		if (substr ($_, 0, 5) eq "name=" && length ($taskid) > 0) {
+			$taskname = substr ($_, 5);
+			$tmplhtml{'BACKUPSETS'} = "$tmplhtml{'BACKUPSETS'}\[$taskid - $taskname<br/>";
+			$taskid = "";			
+		}
+	}
+	close (IN);
 }
 
 # output
