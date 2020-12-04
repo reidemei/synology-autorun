@@ -2,6 +2,7 @@
 
 use CGI qw/:standard/;
 use CGI::Carp qw(fatalsToBrowser);
+use File::Temp qw/ tempfile tempdir /;
 
 print "Content-type: text/html\n\n";
 
@@ -32,13 +33,29 @@ if (open (IN, "/var/packages/autorun/target/config")) {
 # is there an action?
 $action = param ('action');
 if ($action eq "create") {
+    # get the parameter
     $file = param ('file');
     $target = param ('target');
     $backup = param ('backup');
     $eject = param ('eject');
+    $encrypt = param ('encrypt');
+    $password = param ('password');
+    # create the script
     if (open (OUT, ">$file")) {
 	print OUT "#!/bin/sh\n";
-	print OUT "/var/packages/autorun/target/localbackup \"$backup\" \"$target\" \"\$1\" ";
+	if ($encrypt eq "on") {
+	    # store the password
+	    my ($pwdir, $filename, $fh);
+	    $pwdir = "/var/packages/autorun/target/passwords";
+	    mkdir $pwdir unless -d $pwdir;
+	    ($fh, $filename) = tempfile (DIR => $pwdir);
+	    print $fh "$password";
+	    close ($fh);
+	    $filename = substr ($filename, length ($pwdir) + 1, length ($filename) - length ($pwdir) - 1);
+	    print OUT "/var/packages/autorun/target/encryptbackup \"$filename\" \"$backup\" \"$target\" \"\$1\" ";
+	} else {
+	    print OUT "/var/packages/autorun/target/localbackup \"$backup\" \"$target\" \"\$1\" ";
+	}
 	if ($eject eq "on") {
 	    print OUT "100\n";
 	} else {
@@ -99,22 +116,22 @@ if (open (IN,"/bin/mount 2>&1 |")) {
 
 # output
 foreach $value (sort (keys (%backups))) {
-    $text="";
+    $text = "";
     if ( substr ($backups{$value}, 0, 1) eq "-" ) {
 	$backups{$value} = substr ($backups{$value}, 1);
-	$text = "<td></td>\n\t\t\t<td></td>\n\t\t\t<td colspan=\"2\">device not connected</td>";
+	$text = "<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td></td>\n\t\t\t<td colspan=\"2\">device not connected</td>";
     } else {
-	$text = " action=\"localbackup.cgi\" method=\"post\">\n\t\t\t\t<input type=\"hidden\" name=\"action\" value=\"create\" />\n\t\t\t\t<input type=\"hidden\" name=\"file\" value=\"$backups{$value}/$tmplhtml{'SCRIPT'}\" />\n\t\t\t\t<input type=\"hidden\" name=\"backup\" value=\"$value\" />\n\t\t\t\t<input type=\"hidden\" name=\"target\" value=\"$backups{$value}\" />\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"eject\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td><input type=\"submit\" value=\"  Create  \"";
+	$text = " action=\"localbackup.cgi\" method=\"post\">\n\t\t\t\t<input type=\"hidden\" name=\"action\" value=\"create\" />\n\t\t\t\t<input type=\"hidden\" name=\"file\" value=\"$backups{$value}/$tmplhtml{'SCRIPT'}\" />\n\t\t\t\t<input type=\"hidden\" name=\"backup\" value=\"$value\" />\n\t\t\t\t<input type=\"hidden\" name=\"target\" value=\"$backups{$value}\" />\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"eject\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"checkbox\" name=\"encrypt\" /></td>\n\t\t\t\t<td></td>\n\t\t\t\t<td align=\"center\"><input type=\"text\" size=\"15\" name=\"password\" /></td>\n\t\t\t\t<td>\n\t\t\t\t<td><input type=\"submit\" value=\"  Create  \"";
 	if (-e "$backups{$value}/$tmplhtml{'SCRIPT'}") {
 	    $text = "<form onsubmit=\"return commitOverwrite(\'$backups{$value}/$tmplhtml{'SCRIPT'}\')\"$text /></td>\n\t\t\t</form>\n\t\t\t<form action=\"localbackup.cgi\" method=\"post\" onsubmit=\"return commitDelete(\'$backups{$value}/$tmplhtml{'SCRIPT'}\')\">\n\t\t\t\t<input type=\"hidden\" name=\"action\" value=\"delete\" />\n\t\t\t\t<input type=\"hidden\" name=\"file\" value=\"$backups{$value}/$tmplhtml{'SCRIPT'}\" />\n\t\t\t\t<td><input type=\"submit\" value=\"  Delete  \" /></td>\n\t\t\t</form>";
 	} else {
 	    $text = "<form $text /></td><td></td>\n";
 	}
     }
-    $tmplhtml{'BACKUPS'} = "$tmplhtml{'BACKUPS'}\t\t<tr>\n\t\t\t<td>$value</td>\n\t\t\t<td></td>\n\t\t\t<td>$backups{$value}</td>\n\t\t\t<td></td>\n\t\t\t$text\n\t\t</tr>\n";
+    $tmplhtml{'BACKUPS'} = "$tmplhtml{'BACKUPS'}\t\t<tr height=\"27\">\n\t\t\t<td><b>$value</b></td>\n\t\t\t<td></td>\n\t\t\t<td>$backups{$value}</td>\n\t\t\t<td></td>\n\t\t\t$text\n\t\t</tr>\n";
 }
 
-if (open (IN, "localbackup.html")) {
+if (open (IN, "localbackup.htmlt")) {
     while (<IN>) {
 	s/==:([^:]+):==/$tmplhtml{$1}/g;
 	print $_;

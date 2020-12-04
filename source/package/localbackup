@@ -25,11 +25,11 @@ LOGDIR="/var/packages/autorun/target"
 
 if [ $2 = $3 ]
 then
-    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: local backup '$1' started<br/>" >> $LOGDIR/log
+    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$3' - local backup '$1' started<br/>" >> $LOGDIR/log
     /usr/syno/bin/synolocalbkp -b "$1"
-    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: local backup '$1' finished<br/>" >> $LOGDIR/log
+    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$3' - local backup '$1' finished<br/>" >> $LOGDIR/log
 else
-    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: <span style=\"color:red;\">parameters changed for local backup '$1' - '$2' expected but '$3' found, aborting</span><br/>" >> $LOGDIR/log
+    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$3' - <span style=\"color:red;\">parameters changed for local backup '$1' - '$2' expected but '$3' found, aborting</span><br/>" >> $LOGDIR/log
     echo 3 > /dev/ttyS1
     sleep 1s
     echo 3 > /dev/ttyS1
