@@ -110,7 +110,7 @@ if ($action eq "log") {
     }
 } else {
     # print html page
-    if (open (IN, "page.html")) {
+    if (open (IN, "index.htmlt")) {
 	while (<IN>) {
 	    s/==:([^:]+):==/$tmplhtml{$1}/g;
 	    print $_;

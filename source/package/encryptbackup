@@ -1,0 +1,93 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+	echo "incorrect '\$1' - aborting ..."
+	exit 1
+fi
+if [ -z "$2" ]
+then
+	echo "incorrect '\$2' - aborting ..."
+	exit 1
+fi
+if [ -z "$3" ]
+then
+	echo "incorrect '\$3' - aborting ..."
+	exit 1
+fi
+if [ -z "$4" ]
+then
+	echo "incorrect '\$4' - aborting ..."
+	exit 1
+fi
+if [ -z "$5" ]
+then
+	echo "incorrect '\$5' - aborting ..."
+	exit 1
+fi
+
+LOGDIR="/var/packages/autorun/target"
+
+if [ $3 = $4 ]
+then
+    if [ -f "/var/packages/autorun/target/passwords/$1" ]
+    then
+	# load pwd
+	PASSWD=`cat /var/packages/autorun/target/passwords/$1`
+	echo "$PASSWD<br/>" >> $LOGDIR/log
+	# create directories
+	if [ -d "$4/@LocalBackup@" ]
+	then
+	    : # fine
+	else
+	    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$4' - no directory for encrypted data found, creating new one<br/>" >> $LOGDIR/log
+	    mkdir "$4/@LocalBackup@"
+	fi
+	if [ -d "$4/LocalBackup" ]
+	then
+	    : # fine
+	else
+	    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$4' - no directory for the backup found, creating new one<br/>" >> $LOGDIR/log
+	    mkdir "$4/LocalBackup"
+	fi
+	# mount
+	echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$4' - mounting the encrypted file system<br/>" >> $LOGDIR/log
+	/usr/syno/sbin/mount.ecryptfs $4/@LocalBackup@ $4/LocalBackup -o ecryptfs_cipher=aes,ecryptfs_key_bytes=32,ecryptfs_passthrough=n,no_sig_cache,ecryptfs_enable_filename_crypto,passwd=$PASSWD
+	# execute the backup
+	/var/packages/autorun/target/localbackup "$2" "$3" "$4" "$5"
+	# unmount
+	echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$4' - unmounting the encrypted file system<br/>" >> $LOGDIR/log
+	/bin/umount "$4/LocalBackup"
+	if [ $? -eq 0 ]
+	then
+	    : # everything fine
+	else
+	    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$4' - <span style=\"color:red;\">problem while unmounting the encrypted file system, aborting</span><br/>" >> $LOGDIR/log
+	    echo 3 > /dev/ttyS1
+	    sleep 1s
+	    echo 3 > /dev/ttyS1
+	    sleep 1s
+	    echo 3 > /dev/ttyS1
+	    sleep 1s
+	    exit 1
+	fi
+    else
+	echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$4' - <span style=\"color:red;\">stored password missing for backup '$2', aborting</span><br/>" >> $LOGDIR/log
+        echo 3 > /dev/ttyS1
+        sleep 1s
+	echo 3 > /dev/ttyS1
+        sleep 1s
+	echo 3 > /dev/ttyS1
+        sleep 1s
+    fi
+else
+    echo "`date +%Y-%m-%d` `date +%H:%M:%S`: device '$4' - <span style=\"color:red;\">parameters changed for local backup '$2' - '$3' expected but '$3' found, aborting</span><br/>" >> $LOGDIR/log
+    echo 3 > /dev/ttyS1
+    sleep 1s
+    echo 3 > /dev/ttyS1
+    sleep 1s
+    echo 3 > /dev/ttyS1
+    sleep 1s
+fi
+
+exit $5
