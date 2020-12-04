@@ -3,8 +3,6 @@
 eval $(env | grep "^SYNOPKG_PKGDEST=")
 chmod 700 $SYNOPKG_PKGDEST/hotplug
 chmod 700 $SYNOPKG_PKGDEST/autorun
-echo "$SYNOPKG_PKGDEST" > $SYNOPKG_PKGDEST/config
-chmod 400 $SYNOPKG_PKGDEST/config
 chown -R root.root $SYNOPKG_PKGDEST
 
 exit 0

@@ -7,11 +7,11 @@ then
 fi
 
 TRIES=20
-LOGDIR=`cat /usr/syno/hotplug.d/default/autorun.config`
+LOGDIR="/var/packages/Autorun/target"
 MOUNTPATH=""
 COUNT=0
 
-echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Device '$1' inserted, trying to find mount point<br/>" >> $LOGDIR/log
+echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - inserted, trying to find mount point<br/>" >> $LOGDIR/log
 
 while ([ -z "$MOUNTPATH" ] && [ $COUNT -lt $TRIES ])
 do
@@ -22,10 +22,43 @@ done
 
 if [ -z "$MOUNTPATH" ]
 then
-	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Unable to find mount point for device '$1'<br/>" >> $LOGDIR/log
-	return
+	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - unable to find mount point, aborting<br/>" >> $LOGDIR/log
+	exit 1
 fi
 
-echo "`date +%Y-%m-%d` `date +%k:%M:%S`: Mount point '$MOUNTPATH' found for device '$1'<br/>" >> $LOGDIR/log
+echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - mount point '$MOUNTPATH' found<br/>" >> $LOGDIR/log
+
+if [ -x "$MOUNTPATH/autorun" ]
+then
+	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/autorun' found, executing<br/>" >> $LOGDIR/log
+	echo 2 > /dev/ttyS1
+	echo : > /dev/ttyS1
+	$MOUNTPATH/autorun $MOUNTPATH $1
+	if [ $? -eq 0 ]
+	then
+		echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/autorun' finished, no further actions<br/>" >> $LOGDIR/log
+	else
+		echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/autorun' finished, starting unmount<br/>" >> $LOGDIR/log
+		sleep 5
+		sync
+		umount $MOUNTPATH
+		if [ $? -eq 0 ]
+		then
+			echo 1 > /sys/block/$1/device/delete
+			echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - unmounted and ejected<br/>" >> $LOGDIR/log
+		else
+			echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - error while unmounting '$MOUNTPATH', aborting<br/>" >> $LOGDIR/log
+			echo 3 > /dev/ttyS1
+			sleep 1s
+			echo 3 > /dev/ttyS1
+			echo 8 > /dev/ttyS1
+			exit 1
+		fi
+	fi
+	echo 2 > /dev/ttyS1
+	echo 8 > /dev/ttyS1
+else
+	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - no script '$MOUNTPATH/autorun' found, no further actions<br/>" >> $LOGDIR/log
+fi
 
 exit 0
