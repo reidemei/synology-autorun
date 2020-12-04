@@ -6,8 +6,9 @@ then
 	exit 1
 fi
 
+source /var/packages/autorun/target/config
 TRIES=20
-LOGDIR="/var/packages/Autorun/target"
+LOGDIR="/var/packages/autorun/target"
 MOUNTPATH=""
 COUNT=0
 
@@ -28,17 +29,21 @@ fi
 
 echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - mount point '$MOUNTPATH' found<br/>" >> $LOGDIR/log
 
-if [ -x "$MOUNTPATH/autorun" ]
+if [ -x "$MOUNTPATH/$SCRIPT" ]
 then
-	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/autorun' found, executing<br/>" >> $LOGDIR/log
-	echo 2 > /dev/ttyS1
-	echo : > /dev/ttyS1
-	$MOUNTPATH/autorun $MOUNTPATH $1
-	if [ $? -eq 0 ]
+	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/$SCRIPT' found, executing<br/>" >> $LOGDIR/log
+	if [ $BEEP = "1" ]
 	then
-		echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/autorun' finished, no further actions<br/>" >> $LOGDIR/log
-	else
-		echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/autorun' finished, starting unmount<br/>" >> $LOGDIR/log
+	    echo 2 > /dev/ttyS1
+	fi
+	if [ $LED = "1" ]
+	then
+		echo : > /dev/ttyS1
+	fi
+	$MOUNTPATH/autorun $MOUNTPATH $1
+	if [ $? -eq 100 ]
+	then
+		echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/$SCRIPT' finished, starting unmount<br/>" >> $LOGDIR/log
 		sleep 5
 		sync
 		umount $MOUNTPATH
@@ -51,14 +56,23 @@ then
 			echo 3 > /dev/ttyS1
 			sleep 1s
 			echo 3 > /dev/ttyS1
-			echo 8 > /dev/ttyS1
+			sleep 1s
+			echo 3 > /dev/ttyS1
 			exit 1
 		fi
+	else
+		echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - script '$MOUNTPATH/$SCRIPT' finished, no further actions<br/>" >> $LOGDIR/log
 	fi
-	echo 2 > /dev/ttyS1
-	echo 8 > /dev/ttyS1
+	if [ $BEEP = "1" ]
+	then
+		echo 2 > /dev/ttyS1
+	fi
+	if [ $LED = "1" ]
+	then
+		echo 8 > /dev/ttyS1
+	fi
 else
-	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - no script '$MOUNTPATH/autorun' found, no further actions<br/>" >> $LOGDIR/log
+	echo "`date +%Y-%m-%d` `date +%k:%M:%S`: device '$1' - no script '$MOUNTPATH/$SCRIPT' found, no further actions<br/>" >> $LOGDIR/log
 fi
 
 exit 0

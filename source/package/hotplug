@@ -3,25 +3,25 @@
 if [ "$1" != "block" ]
 then
 	echo "incorrect '\$1' - aborting ..."
-	return	
+	exit
 fi
 if [ "$ACTION" != "add" ]
 then
 	echo "incorrect '\$ACTION' - aborting ..."
-	return
+	exit
 fi
 if [ "$DEVTYPE" != "disk" ]
 then
 	echo "incorrect '\$DEVTYPE' - aborting ..."
-	return
+	exit
 fi
 if [ -z "$DEVNAME" ]
 then
 	echo "incorrect '\$DEVNAME' - aborting ..."
-	return
+	exit
 fi
 
-if [ -e /var/packages/Autorun/target/autorun ]
+if [ -e /var/packages/autorun/target/autorun ]
 then
-	/var/packages/Autorun/target/autorun $DEVNAME &
+	/var/packages/autorun/target/autorun $DEVNAME &
 fi

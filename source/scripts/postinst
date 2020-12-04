@@ -3,6 +3,7 @@
 eval $(env | grep "^SYNOPKG_PKGDEST=")
 chmod 700 $SYNOPKG_PKGDEST/hotplug
 chmod 700 $SYNOPKG_PKGDEST/autorun
-chown -R root.root $SYNOPKG_PKGDEST
+chown -R admin.users $SYNOPKG_PKGDEST
+ln -s "${SYNOPKG_PKGDEST}/web" /usr/syno/synoman/webman/3rdparty/autorun
 
 exit 0
