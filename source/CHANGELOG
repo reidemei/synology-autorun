@@ -1,4 +1,6 @@
-﻿1.4
+﻿1.5
+ - changed: configurable wait times before starting the script
+1.4
  !!! YOU HAVE TO RECREATE THE SCRIPTS FOR THE LOCAL BACKUP!!!
  - changed: requires DSM 5.0+
  - changed: include Perl package as requirement

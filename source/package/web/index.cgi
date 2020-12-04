@@ -33,6 +33,8 @@ $tmplhtml{'BEEP'}=" checked ";
 $tmplhtml{'LED'}=" checked ";
 $tmplhtml{'NOTIFY'}=" checked ";
 $tmplhtml{'NOTIFYTARGET'}="admin";
+$tmplhtml{'TRIES'}="20";
+$tmplhtml{'WAIT'}="0";
 
 # shall we save?
 $action=param ('action');
@@ -43,6 +45,8 @@ if ($action eq "save") {
 	$led=param ('led');
         $notify=param ('notify');
         $notifytarget=param ('notifytarget');
+        $tries=param ('searchtime');
+        $wait=param ('waittime');
 	print OUT "SCRIPT=$script\n";
 	if ($beep eq "on") {
 	    print OUT "BEEP=1\n";
@@ -60,6 +64,8 @@ if ($action eq "save") {
             print OUT "NOTIFY=0\n";
         }
         print OUT "NOTIFYTARGET=$notifytarget\n";
+        print OUT "TRIES=$tries\n";
+        print OUT "WAIT=$wait\n";
 	close (OUT);
 	$tmplhtml{'saved'}=" <small style=\"color:green;\">(saved)</small>";
     } else {
