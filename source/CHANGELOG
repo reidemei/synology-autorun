@@ -1,7 +1,10 @@
+1.2
+ - new: show warning for required Perl package
 1.1
  - new: report space left on the device in the log
  - new: optional DSM notification when finished
- - changed: adjusted notes for file name encryption on the local backup
+ - new: mount encrypted backup for restore - option for file name encryption added
+ - changed: adjusted notes for file name encryption
  - fixed: script not executed when name changed
 1.0
  - new: local backup - option for file name encryption added

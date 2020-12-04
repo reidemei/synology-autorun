@@ -24,8 +24,14 @@ if ($action eq "mount") {
     # get the parameter
     $device = param ('path');
     $password = param ('password');
+    $encryptfilename = param ('encryptfilename');
+    if ($encryptfilename eq "on") {
+        $encryptfilename = "y";
+    } else {
+        $encryptfilename = "n";
+    }
     $tmplhtml{'RESULT'} = "<br/><b>Result:<br/>";
-    if (open (IN,"/usr/syno/sbin/mount.ecryptfs $device/\@LocalBackup\@ $device/LocalBackup -o ecryptfs_cipher=aes,ecryptfs_key_bytes=32,ecryptfs_passthrough=n,no_sig_cache,ecryptfs_enable_filename_crypto,passwd=$password 2>&1 |")) {
+    if (open (IN,"/usr/syno/sbin/mount.ecryptfs $device/\@LocalBackup\@ $device/LocalBackup -o ecryptfs_cipher=aes,ecryptfs_key_bytes=32,ecryptfs_passthrough=n,no_sig_cache,ecryptfs_enable_filename_crypto=$encryptfilename,passwd=$password 2>&1 |")) {
 	while(<IN>) {
 	    $tmplhtml{'RESULT'} = "$tmplhtml{'RESULT'}$_";
 	}
@@ -89,6 +95,9 @@ if (($countu+$countm) > 0) {
 	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td>Password:</td>\n";
 	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td><input type=\"text\" name=\"password\" /></td>\n";
 	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td width=\"10px\"></td>\n";
+        $tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td><input type=\"checkbox\" name=\"encryptfilename\" /></td>\n";
+        $tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td>Encrypt file names?</td>\n";
+        $tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td width=\"10px\"></td>\n";
 	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td><input type=\"submit\" value=\"  Mount  \" /> <small>(might take some seconds)</small></td>\n";
 	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t</tr>\n\t\t</form>\n";
     }
@@ -96,7 +105,7 @@ if (($countu+$countm) > 0) {
 	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t<form action=\"encrypt.cgi\" method=\"post\">\n";
 	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t<input type=\"hidden\" name=\"action\" value=\"unmount\" />\n";
 	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t<tr>\n\t\t\t\t<td>Device:</td>\n";
-	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td colspan=\"4\"><select name=\"path\">\n";
+	$tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<td colspan=\"7\"><select name=\"path\">\n";
 	foreach (sort (@drivesm)) {
 	    $tmplhtml{'DRIVES'} = "$tmplhtml{'DRIVES'}\t\t\t\t<option>$_</option>\n";
 	}
