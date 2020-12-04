@@ -1,5 +1,5 @@
 rm package.tgz
 rm autorun.spk
-tar -czvf package.tgz -C package/ autorun hotplug localbackup encryptbackup config web
-tar -cvvf autorun-0.9.spk INFO LICENSE PACKAGE_ICON.PNG scripts package.tgz
+tar -czvf package.tgz -C package/ autorun hotplug localbackup encryptbackup config web -X tarexclude
+tar -cvvf autorun-1.0.spk INFO CHANGELOG LICENSE PACKAGE_ICON.PNG scripts package.tgz -X tarexclude
 rm package.tgz
