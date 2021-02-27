@@ -55,7 +55,7 @@ then
 	FINGERPRINT=$(/bin/sha256sum "$MOUNTPATH/$SCRIPT" | /bin/awk '{print $1}')
 
 	# check if there's a line with this FINGERPRINT inside the KNOWNSCRIPTSFILEPATH text file
-	if [ ! -z $(/bin/grep "$FINGERPRINT" "$KNOWNSCRIPTSFILEPATH") ]
+	if [ ! -z $(/bin/grep -x "$FINGERPRINT" "$KNOWNSCRIPTSFILEPATH") ]
 	then 
 		# execute the script
 		#   $1 - mount path
