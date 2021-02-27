@@ -11,6 +11,17 @@
                 "allowBlank": false
             } 
         }] 
+    },{ 
+        "type": "textfield", 
+        "desc": "Path to the 'known_scripts' text file containing a single sha256 hash per line, for each script which is trusted to autorun. From File Station in DSM, right click the text file -> Properties and copy the Location value.<br/><br/>Leave this field empty to disable hash validation.", 
+        "subitems": [{
+            "key": "known_scripts_path", 
+            "desc": "Script to execute", 
+            "defaultValue": "/volume1/Admin/Autorun/known_scripts",
+            "validator": {
+                "allowBlank": true
+            } 
+        }] 
     },{
         "type": "textfield", 
         "desc": "An exit value of 100 will unmount and eject the device when the script is finished, all other will leave it mounted. You can stop autorun in the package center to temporarily disable it.<br/><br/>The search time is for finding the mount point when a device is attached, the additional wait time gives the DSM some leeway to properly mount the drive before starting the script.<br/>You may have to increase those times depending on your hardware.", 
