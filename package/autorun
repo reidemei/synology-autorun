@@ -2,8 +2,6 @@
 
 source /var/packages/autorun/target/common
 
-KNOWNSCRIPTSFILEPATH="/volume1/Admin/Autorun/known_scripts"
-
 if [ -z "$1" ]
 then
 	echo "incorrect '\$1' - aborting ..."

@@ -17,10 +17,11 @@
         "subitems": [{
             "key": "known_scripts_path", 
             "desc": "Path to 'known_scripts'", 
-            "defaultValue": "",
+            "emptyText": "For example: /volume1/Admin/Autorun/known_scripts",
             "validator": {
                 "allowBlank": true
-            } 
+            },
+            "width": 360
         }] 
     },{
         "type": "textfield", 
