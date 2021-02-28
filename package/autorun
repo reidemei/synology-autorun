@@ -16,6 +16,54 @@ source /var/packages/autorun/target/config
 MOUNTPATH=""
 COUNT=0
 
+executeFoundScript(){
+
+	# execute the script
+	#   $1 - device
+	$MOUNTPATH/$SCRIPT $MOUNTPATH $1
+
+	# save the result for later
+	RESULT=$?
+
+	# get the free space
+	FREE=`/bin/df -h "$MOUNTPATH" | /bin/grep "$MOUNTPATH" | /bin/awk '{ print $4 }'`
+
+	# unmount when the result is 100
+	if [ $RESULT = "100" ]
+	then
+		logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' finished ($FREE left on device), starting unmount"
+		/bin/sleep 5
+		/bin/sync
+		/bin/umount $MOUNTPATH
+		if [ $? -eq 0 ]
+		then
+			# and eject the drive
+			EXTHD=`/bin/echo $1 | sed "s/[0-9]//"`
+			/bin/echo 1 > /sys/block/$EXTHD/device/delete
+			logInfo "device '$1' - unmounted and ejected"
+		else
+			# abort on error
+			logError "device '$1' - error while unmounting '$MOUNTPATH', aborting"
+			beepError
+			exit 1
+		fi
+	else
+		logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' finished ($FREE left on device), no further actions"
+	fi
+	if [ $BEEP = "1" ]
+	then
+		beep 2
+	fi
+	if [ $LED = "1" ]
+	then
+		beep 8
+	fi
+	if [ $NOTIFY = "1" ]
+	then
+		/usr/syno/bin/synodsmnotify $NOTIFYTARGET "autorun" "script finished, $FREE left on $MOUNTPATH"
+	fi
+}
+
 # try to get the mount path
 logInfo "device '$1' - inserted, trying to find mount point"
 while ([ -z "$MOUNTPATH" ] && [ $COUNT -lt $TRIES ])
@@ -28,7 +76,7 @@ done
 # abort when nothing is found
 if [ -z "$MOUNTPATH" ]
 then
-	logInfo "device '$1' - unable to find mount point, aborting"
+	logError "device '$1' - unable to find mount point, aborting"
 	exit 1
 fi
 logInfo "device '$1' - mount point '$MOUNTPATH' found"
@@ -50,68 +98,49 @@ then
 		beep :
 	fi
 
-	FINGERPRINT=$(/bin/sha256sum "$MOUNTPATH/$SCRIPT" | /bin/awk '{print $1}')
+	if [ -z "$KNOWNSCRIPTSFILEPATH" ]
+	then
+		# KNOWNSCRIPTSFILEPATH is empty, so don't check for script fingerprints
+		logInfo "no path to 'known_scripts' has been setup, continue without checking script fingerprints"
+		executeFoundScript $1
+	else
+		# KNOWNSCRIPTSFILEPATH is NOT empty
 
-	# check if there's a line with this FINGERPRINT inside the KNOWNSCRIPTSFILEPATH text file
-	if [ ! -z $(/bin/grep -x "$FINGERPRINT" "$KNOWNSCRIPTSFILEPATH") ]
-	then 
-		# execute the script
-		#   $1 - mount path
-		#   $2 - device
-		$MOUNTPATH/$SCRIPT $MOUNTPATH $1
-		
-		# save the result for later
-		RESULT=$?
+		if [ -f "$KNOWNSCRIPTSFILEPATH" ]; then
+			logInfo "$KNOWNSCRIPTSFILEPATH exists, continue to check for script fingerprints"
+			FINGERPRINT=$(/bin/sha256sum "$MOUNTPATH/$SCRIPT" | /bin/awk '{print $1}')
 
-		# get the free space
-			FREE=`/bin/df -h "$MOUNTPATH" | /bin/grep "$MOUNTPATH" | /bin/awk '{ print $4 }'`
-
-		# unmount when the result is 100
-		if [ $RESULT = "100" ]
-		then
-			logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' finished ($FREE left on device), starting unmount"
-			/bin/sleep 5
-			/bin/sync
-			/bin/umount $MOUNTPATH
-			if [ $? -eq 0 ]
-			then
-				# and eject the drive
-				EXTHD=`/bin/echo $1 | sed "s/[0-9]//"`
-				/bin/echo 1 > /sys/block/$EXTHD/device/delete
-				logInfo "device '$1' - unmounted and ejected"
+			# check if there's a line with this FINGERPRINT inside the KNOWNSCRIPTSFILEPATH text file
+			if [ ! -z $(/bin/grep -x "$FINGERPRINT" "$KNOWNSCRIPTSFILEPATH") ]
+			then 
+				executeFoundScript $1
 			else
-				# abort on error
-				logError "device '$1' - error while unmounting '$MOUNTPATH', aborting"
-					beepError
+				# no
+				logError "device '$1' - the fingerprint for script '$MOUNTPATH/$SCRIPT' is not found inside '$KNOWNSCRIPTSFILEPATH', no further actions"
+
+				if [ $NOTIFY = "1" ]
+				then
+				/usr/syno/bin/synodsmnotify $NOTIFYTARGET "autorun" "script failed on device '$1' - fingerprint $FINGERPRINT for script '$MOUNTPATH/$SCRIPT' is not found inside '$KNOWNSCRIPTSFILEPATH'"
+				fi
+
+				beepError
+
 				exit 1
 			fi
-		else
-			logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' finished ($FREE left on device), no further actions"
-		fi
-		if [ $BEEP = "1" ]
-		then
-			beep 2
-		fi
-		if [ $LED = "1" ]
-		then
-			beep 8
-		fi
+
+		else 
+			logError "can't check for known script fingerprints because $KNOWNSCRIPTSFILEPATH does not exist, no further actions"
+
 			if [ $NOTIFY = "1" ]
 			then
-			/usr/syno/bin/synodsmnotify $NOTIFYTARGET "autorun" "script finished, $FREE left on $MOUNTPATH"
+			/usr/syno/bin/synodsmnotify $NOTIFYTARGET "autorun" "can't check for known script fingerprints because $KNOWNSCRIPTSFILEPATH does not exist, no further actions"
 			fi
-	else
-		# no
-		logInfo "device '$1' - the fingerprint for script '$MOUNTPATH/$SCRIPT' is not found inside '$KNOWNSCRIPTSFILEPATH', no further actions"
 
-		if [ $NOTIFY = "1" ]
-		then
-		/usr/syno/bin/synodsmnotify $NOTIFYTARGET "autorun" "script failed on device '$1' - fingerprint $FINGERPRINT for script '$MOUNTPATH/$SCRIPT' is not found inside '$KNOWNSCRIPTSFILEPATH'"
+			beepError
+
+			exit 1
 		fi
-
-		beepError
 	fi
-
 else
 	# no
 	logInfo "device '$1' - no script '$MOUNTPATH/$SCRIPT' found, no further actions"
