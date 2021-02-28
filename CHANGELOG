@@ -1,4 +1,6 @@
-﻿1.7
+﻿1.8
+ - added: optional feature to verify sha256 fingerprints of scripts before running them
+1.7
  - changed: compatibility with DSM 6.0
  - changed: configuration moved to setup, just un- and reinstall if you want to change something
  - fixed: eject does not properly work sometimes
