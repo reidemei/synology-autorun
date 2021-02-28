@@ -112,7 +112,8 @@ then
 
 			# check if there's a line with this FINGERPRINT inside the KNOWNSCRIPTSFILEPATH text file
 			if [ ! -z $(/bin/grep -x "$FINGERPRINT" "$KNOWNSCRIPTSFILEPATH") ]
-			then 
+			then
+				logInfo "device '$1' - everything checks out, fingerprint for '$MOUNTPATH/$SCRIPT' found inside '$KNOWNSCRIPTSFILEPATH', executing script..." 
 				executeFoundScript $1
 			else
 				# no
