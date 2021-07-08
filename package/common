@@ -21,10 +21,10 @@ beep() {
 }
 
 beepError() {
-        beep 3
-        /bin/sleep 1s
 	beep 3
-        /bin/sleep 1s
+	/bin/sleep 1s
 	beep 3
-        /bin/sleep 1s
+	/bin/sleep 1s
+	beep 3
+	/bin/sleep 1s
 }

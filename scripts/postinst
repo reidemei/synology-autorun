@@ -2,6 +2,7 @@
 
 eval $(env | grep "^SYNOPKG_PKGDEST=")
 eval $(env | grep "^config_script=")
+eval $(env | grep "^known_scripts_path=")
 eval $(env | grep "^config_search=")
 eval $(env | grep "^config_wait=")
 eval $(env | grep "^config_beep=")
@@ -9,6 +10,7 @@ eval $(env | grep "^config_led=")
 eval $(env | grep "^config_notify=")
 
 echo "SCRIPT=$config_script" > "$SYNOPKG_PKGDEST/config"
+echo "KNOWNSCRIPTSFILEPATH=\"$known_scripts_path\"" >> "$SYNOPKG_PKGDEST/config"
 echo "TRIES=$config_search" >> "$SYNOPKG_PKGDEST/config"
 echo "WAIT=$config_wait" >> "$SYNOPKG_PKGDEST/config"
 if [ $config_beep = "true" ]
