@@ -1,56 +1,85 @@
-﻿1.7
- - changed: compatibility with DSM 6.0
+1.8
+ !!! A MANUAL STEP IS REQUIRED AFTER THE INSTALLATION !!!
+ Third Party packages are restricted by Synology in DSM 7. Since autorun does require root 
+ permission to perform its job an additional manual step is required after the installation.
+ SSH to your NAS (as an admin user) and execute the following command:
+   sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
+
+ - changed: compatibility with DSM 7
+ - removed: desktop notification
+ - note: for DSM 6.x use the version 1.7, which can be found 
+   at https://github.com/reidemei/synology-autorun/releases/tag/v1.7
+
+1.7
+ - changed: compatibility with DSM 6
  - changed: configuration moved to setup, just un- and reinstall if you want to change something
  - fixed: eject does not properly work sometimes
  - removed: all GUI, this includes the local backup scripts 
             (sorry, but I'm tired of the constant changes by Synology)
  - note: for DSM 5.x use the version 1.6, which can be found 
-   at http://www.synology-forum.de/showthread.html?53183-autorun
+   at https://github.com/reidemei/synology-autorun/releases/tag/v1.6
+
 1.6
  - changed: compatibility with DSM 5.1
+
 1.5
  - changed: configurable wait times before starting the script
+
 1.4
- !!! YOU HAVE TO RECREATE THE SCRIPTS FOR THE LOCAL BACKUP!!!
+ !!! YOU HAVE TO RECREATE THE SCRIPTS FOR THE LOCAL BACKUP !!!
+
  - changed: requires DSM 5.0+
  - changed: include Perl package as requirement
  - changed: local backup - adjustments for changes in DSM 5.0
  - note: for DSM 4.3 and below use the version 1.3, which can be found 
-   at http://www.synology-forum.de/showthread.html?53183-autorun
+   at https://github.com/reidemei/synology-autorun/releases/tag/v1.3
+
 1.3
  - changed: allow access to settings by any user in the admin group (code [c] dakkar)
  - changed: link to restore encrypted backup added to main page
  - fixed: unable to create backup-script when multiple drives attached (on some browsers)
+
 1.2
  - new: show warning for required Perl package
+
 1.1
  - new: report space left on the device in the log
  - new: optional DSM notification when finished
  - new: mount encrypted backup for restore - option for file name encryption added
  - changed: adjusted notes for file name encryption
  - fixed: script not executed when name changed
+
 1.0
  - new: local backup - option for file name encryption added
  - changed: local backup - name must be entered manually (Synology changes that too often)
  - changed: local backup - 10s sleep added to give the drive some time to be properly mounted
+
 0.9
  - new: now supports update
  - changed: requires DSM 3.2
+
 0.8
  - fixed: don't log passwords
+
 0.7
  - new: local backup - option for encryption added
+
 0.6
  - changed: requires DSM 3.1
  - fixed: local backup - wait till backup is finished
+
 0.5
  - fixed: incorrect handling of DS restarts
+
 0.4
  - new: create scripts for the local backup
+
 0.3
  - new: settings page in DSM added
+
 0.2
  - new: beep at start and finish
  - new: use DS led for status
+
 0.1
  - intial test

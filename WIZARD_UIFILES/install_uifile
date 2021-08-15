@@ -43,13 +43,16 @@
             "desc": "Use LED (you can safely remove the device when it goes green again)", 
             "defaultValue": true 
         }] 
-    },{
-        "type": "textfield", 
-        "desc": "Send a DSM notification when finished.<br/>You can use a username or a @groupname (including the leading @) or leave empty for no notification.", 
-        "subitems": [{ 
-            "key": "config_notify", 
-            "desc": "Target user / group",
-            "defaultValue": "@administrators" 
-        }] 
     }] 
+},{
+    "step_title": "IMPORTANT: Manual Action Required!",
+    "items": [{
+        "type": "textfield", 
+        "desc": "Third Party packages are restricted by Synology in DSM 7. Since autorun does require root permission to perform its job an additional manual step is required after the installation.<br/><br/>SSH to your NAS (as an admin user) and execute the following command (copy it now).", 
+        "subitems": [{
+            "key": "ignore_value", 
+            "desc": "Command", 
+            "defaultValue": "sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege"
+        }]
+    }]
 }]
