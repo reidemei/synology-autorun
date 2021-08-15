@@ -31,11 +31,4 @@ case $1 in
 			exit 1
 		fi
 	;;
-	log)
-		if [ -e /var/packages/autorun/target/log ]
-		then
-			echo /var/packages/autorun/target/log
-		fi
-		exit 0
-	;;
 esac

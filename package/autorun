@@ -91,10 +91,6 @@ then
 	then
 		beep 8
 	fi
-        if [ $NOTIFY = "1" ]
-        then
-		/usr/syno/bin/synodsmnotify $NOTIFYTARGET "autorun" "script finished, $FREE left on $MOUNTPATH"
-        fi
 else
 	# no
 	logInfo "device '$1' - no script '$MOUNTPATH/$SCRIPT' found, no further actions"
