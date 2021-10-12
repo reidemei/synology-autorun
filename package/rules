@@ -1,1 +1,1 @@
-SUBSYSTEM=="block", ACTION=="add", ENV{DEVTYPE}=="partition", PROGRAM="/var/packages/autorun/target/udev %k"
+SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_USAGE}=="filesystem", RUN+="/var/packages/autorun/target/udev %k"

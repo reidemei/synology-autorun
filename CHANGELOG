@@ -1,3 +1,6 @@
+1.8.1
+ - changed: udev rule so that the autorun script also gets executed on devices with multiple partitions/filesystems.
+
 1.8
  !!! A MANUAL STEP IS REQUIRED AFTER THE INSTALLATION !!!
  Third Party packages are restricted by Synology in DSM 7. Since autorun does require root 

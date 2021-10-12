@@ -22,7 +22,7 @@ while ([ -z "$MOUNTPATH" ] && [ $COUNT -lt $TRIES ])
 do
 	MOUNTPATH=`/bin/mount 2>&1 | /bin/grep "/dev/$1" | /bin/cut -d ' ' -f3`
 	COUNT=$(($COUNT+1))
-	/bin/sleep 1s
+	/bin/sleep 4s
 done
 
 # abort when nothing is found
