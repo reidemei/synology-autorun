@@ -40,6 +40,20 @@ logInfo "device '$1' - mount point '$MOUNTPATH' found"
 if [ -x "$MOUNTPATH/$SCRIPT" ]
 then
 	# yes
+	if [ "$KEY" != "" ]
+	then
+		if [ ! -r "$MOUNTPATH/key" ]
+		then
+	    	logError "device '$1' - script '$MOUNTPATH/$SCRIPT' found, but no device key exists under '$MOUNTPATH/key'. Aborting"
+    		exit 0
+		fi
+		DEVICE_KEY=`cat "$MOUNTPATH/key"`
+		if [ "$KEY" != "$DEVICE_KEY" ]
+		then
+			logError "device '$1' - script '$MOUNTPATH/$SCRIPT' found, but device key does not match. Aborting"
+			exit 0
+		fi
+	fi
 	logInfo "device '$1' - script '$MOUNTPATH/$SCRIPT' found, executing"
 	if [ $BEEP = "1" ]
 	then

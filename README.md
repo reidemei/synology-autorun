@@ -19,6 +19,13 @@ SSH to your NAS (as an admin user) and execute the following command:
 sudo cp /var/packages/autorun/conf/privilege.root /var/packages/autorun/conf/privilege
 ```
 
+# security considerations
+Everybody with physical access to your Disc Station is able to execute any command as root by
+plugging in a USB-Stick with an 'autorun' script. If this is an issue for you, there will be two options:
+
+(1) set a different name for the autorun script (via installation wizard or by changing ``SCRIPT`` setting in file ``/var/packages/autorun/target/config``)
+
+(2) set a key which must be present on the device in file ``/key`` (via installation wizard or by changing ``KEY`` setting in file ``/var/packages/autorun/target/config``)
 
 # build
 Should run on any *nix box / subsystem.

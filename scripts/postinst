@@ -6,10 +6,13 @@ eval $(env | grep "^config_search=")
 eval $(env | grep "^config_wait=")
 eval $(env | grep "^config_beep=")
 eval $(env | grep "^config_led=")
+eval $(env | grep "^config_key=")
 
 echo "SCRIPT=$config_script" > "$SYNOPKG_PKGDEST/config"
 echo "TRIES=$config_search" >> "$SYNOPKG_PKGDEST/config"
 echo "WAIT=$config_wait" >> "$SYNOPKG_PKGDEST/config"
+echo "KEY='$config_key'" >> "$SYNOPKG_PKGDEST/config"
+
 if [ $config_beep = "true" ]
 then
 	echo "BEEP=1" >> "$SYNOPKG_PKGDEST/config"

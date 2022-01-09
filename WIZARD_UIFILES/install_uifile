@@ -45,6 +45,24 @@
         }] 
     }] 
 },{
+    "step_title": "Security settings",
+    "items": [{
+            "type": "textfield",
+            "desc": "You can enable basic security by defining a key here. Only if the plugged in device presents the key in file '/key', autorun will be executed. You can leave the key blank to disable this feature.",
+            "subitems": [{
+                    "key": "config_key",
+                    "desc": "Key",
+                    "defaultValue": "",
+                    "validator": {
+                            "allowBlank": true,
+                            "regex": {
+                                "expr": "/^[^\\\\';()]*$/",
+                                "errorText": "The following symbols are not allowed: \", ', ;, (, ), \\"
+                            }
+                    }
+            }]
+        }]
+},{
     "step_title": "IMPORTANT: Manual Action Required!",
     "items": [{
         "type": "textfield", 
