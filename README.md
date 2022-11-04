@@ -28,3 +28,8 @@ Should run on any *nix box / subsystem.
 * publish the created .spk
 
 *Note that almost all of the UI is currently not included in the build (since I got bored of updating that with more or less every DSM version).*
+
+
+# contributions
+
+I will not accept any feature requests. This project has no priority anymore so I will only do the minimum to keep the base functionality working with newer DSM versions. Feel free to fork and provide your own versions.
