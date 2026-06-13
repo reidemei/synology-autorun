@@ -1,3 +1,5 @@
+**I do no longer use Synology. Switch to one of the forks.**
+
 # autorun
 Execute scripts when connecting external drives (USB / eSATA) on a Synology NAS.
 
